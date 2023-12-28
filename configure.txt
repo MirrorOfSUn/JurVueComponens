@@ -1,0 +1,14 @@
+# Use last version of bootstrap
+npm install --save @popperjs/core bootstrap@next
+
+# if error: npm ERR! notarget No matching version found for bootstrap@next.
+# check avalable versions
+npm show bootstrap versions
+
+#install version
+npm install --save bootstrap@5.3.2
+
+# Import Bootstrap to src/main.js:
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
