@@ -29,7 +29,7 @@
   </table>
 
   <div class="row footer">
-    <div class="col-6">
+    <div class="col-4">
       <slot name="footer">
         Showing {{ pageFirstRecord }} to {{ pageLastRecord }} of
         {{ pageTotalFilteredRecords }} entries
@@ -38,7 +38,7 @@
         >
       </slot>
     </div>
-    <div class="col-6 text-end">
+    <div class="col-8 text-end">
       <jurTablePages v-model:data="data" @reload="loadData"></jurTablePages>
     </div>
   </div>

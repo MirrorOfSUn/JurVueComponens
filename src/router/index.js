@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
 import UserListView from '../views/UserListView.vue'
 import TestView from '../views/TestView.vue'
+import AboutView from '../views/AboutView.vue'
+//import TestTableView from '../views/TestTableView.vue'
 //import ElementView from '../views/ElementView.vue'
 //import VantView from '../views/VantView.vue'
 import UserListBootstrapView from '../views/UserListBootstrapView.vue'
@@ -12,7 +14,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'Main',
-      component: UserListView
+      component: AboutView
     },
     {
       path: '/users',
