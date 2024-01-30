@@ -21,7 +21,7 @@
   </div>
   <div>
     <h1>Table 1</h1>
-    <JurTable :config="tblConf">Test-test</JurTable>
+    <JurTable :config="tblConf"><JurTableDetail pkey="ASD"></JurTableDetail></JurTable>
     <!-- <h1>Table 2</h1>
     <Jur1Table :config="tblConf1"></JurTable>
     <h1>Table 3</h1>
@@ -41,7 +41,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import JurTable from '@/components/JurTable1.vue'
+import JurTable from '@/components/JurTable.vue'
+import JurTableDetail from '@/components/JurTableDetail.vue'
 
 const users_db = [
   {

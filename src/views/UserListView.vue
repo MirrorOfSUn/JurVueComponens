@@ -1,26 +1,50 @@
 <template>
-  <div class="container">
-    <jur-table :datatable="users_db" :fields="fields" :page-size="2" v-model:search="searchString">
-      <!--template #footer>Showing 1 to 10 of {{ data.total_records }} entries </template-->
-    </jur-table>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" @change="confFieldsUpd($event)" checked />
+    <label class="form-check-label" for="conf_fields"> Add fields to config </label>
   </div>
-  <hr />
-  <div class="container">
-    <jur-table :fields="fields" :api="'./api/users'" :is-server-side="true" :page-size="1">
-      <!--template #footer>Showing 1 to 10 of {{ data.total_records }} entries </template-->
-    </jur-table>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" @change="confBulkUpd($event)" checked />
+    <label class="form-check-label" for="conf_bulk">Bulk </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" @change="confShowdetailsUpd($event)" checked />
+    <label class="form-check-label" for="conf_bulk">Showdetails </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" @change="confFieldWidthUpd($event)" />
+    <label class="form-check-label" for="conf_bulk">Field Width </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" @change="configServerSideUpd($event)" />
+    <label class="form-check-label" for="conf_isServerSide">isServerSide </label>
+  </div>
+  <div>
+    <h1>Table 1</h1>
+    <JurTable :config="tblConf"><JurTableDetail api="apiTest"></JurTableDetail></JurTable>
+    <!-- <h1>Table 2</h1>
+    <Jur1Table :config="tblConf1"></JurTable>
+    <h1>Table 3</h1>
+    <Jur1Table :config="tblConf2"></JurTable> -->
   </div>
 </template>
 
-<script setup>
-import JurTable from '../components/JurTable.vue'
-import { ref } from 'vue'
-// import axios from 'axios'
-let searchString = ref('FN')
+<style>
+@media (min-width: 1024px) {
+  .about {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+}
+</style>
 
-// const emit = defineEmits(['change', 'delete'])
-// {"users":[{"FirstName":"FN1","LastName":"LN1","MiddleName":"","FullName":"AAAAAA","Phone1":"12345","Phone2":"","Email1":"","Email2":"","Address":"","is_active":true,"id":1},{"FirstName":"FN2","LastName":"LN2","MiddleName":"","FullName":"Full Name","Phone1":"67890","Phone2":"","Email1":"","Email2":"","Address":"","is_active":true,"id":2},{"FirstName":"FN3","LastName":"LN3","MiddleName":"","FullName":"FN3 LN3","Phone1":"12345","Phone2":"","Email1":"","Email2":"","Address":"","is_active":true,"id":3},{"FirstName":"FN4","LastName":"LN4","MiddleName":"","FullName":"FN4 LN4","Phone1":"67890","Phone2":"","Email1":"","Email2":"","Address":"","is_active":true,"id":4}],"total_records":4,"total_filtered_records":4,"total_pages":1,"current_page":0,"page_size":100}
-let users_db = ref([
+<script setup>
+import { ref } from 'vue'
+import JurTable from '@/components/JurTable.vue'
+import JurTableDetail from '@/components/JurTableDetail.vue'
+
+const users_db = [
   {
     FirstName: 'FN1',
     LastName: 'LN1',
@@ -39,7 +63,7 @@ let users_db = ref([
     LastName: 'LN1',
     MiddleName: '',
     FullName: 'AAAAAA',
-    Phone1: '12345',
+    Phone1: '12346',
     Phone2: '',
     Email1: '',
     Email2: '',
@@ -57,7 +81,7 @@ let users_db = ref([
     Email1: '',
     Email2: '',
     Address: '',
-    is_active: true,
+    is_active: false,
     id: 3
   },
   {
@@ -78,25 +102,87 @@ let users_db = ref([
     LastName: 'LN1',
     MiddleName: '',
     FullName: 'AAAAAA',
-    Phone1: '12345',
+    Phone1: '12346',
     Phone2: '',
     Email1: '',
     Email2: '',
     Address: '',
     is_active: true,
-    id: 5
+    id: 8
   }
-])
+]
 const fields = [
   {
     name: 'FullName',
     label: 'Full Name',
     sortable: true,
     searchable: true,
+    type: 'string',
+    hidden: false,
     data: (rec) => {
       return rec.FirstName + '-' + rec.LastName
     }
   },
-  { name: 'Phone1', label: 'Phone', sortable: true, search: true }
+  {
+    name: 'Phone1',
+    label: 'Phone',
+    type: 'string',
+    sortable: true,
+    search: true,
+    hidden: false
+  }
 ]
+
+// helper1.config({ datatable: users_db, fields: fields })
+const tblConf = ref({
+  colors: {
+    thead: 'table-dark',
+    even: 'table-light',
+    // odd: 'table-info',
+    opened: 'table-primary'
+  },
+  fields: fields,
+  datatable: users_db,
+  bulk: true,
+  showdetails: true,
+  isServerSide: false,
+
+  apiId: 'id',
+  api: './api/users',
+  apiDetail: './api/user/'
+})
+// const tblConf1 = { datatable: users_db }
+// const tblConf2 = { fields: fields, datatable: users_db, bulk: true }
+
+function confFieldsUpd(e) {
+  if (e.target.checked) tblConf.value.fields = fields
+  else tblConf.value.fields = []
+}
+
+function confBulkUpd(e) {
+  tblConf.value.bulk = e.target.checked
+}
+
+function confShowdetailsUpd(e) {
+  tblConf.value.showdetails = e.target.checked
+}
+
+function configServerSideUpd(e) {
+  tblConf.value.isServerSide = e.target.checked
+  if (tblConf.value.isServerSide) {
+    tblConf.value['api'] = './api/users'
+  } else {
+    tblConf.value['api'] = ''
+  }
+}
+
+function confFieldWidthUpd(e) {
+  if (e.target.checked) {
+    fields[0]['width'] = '300px'
+    fields[1]['width'] = '*px'
+  } else {
+    if (fields[0].width) delete fields.value[0].width
+    if (fields[1].width) delete fields.value[1].width
+  }
+}
 </script>

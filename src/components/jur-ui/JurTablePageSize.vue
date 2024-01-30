@@ -4,9 +4,9 @@
     <div class="col-auto">
       <select
         class="form-select form-select-sm"
-        @change="$emit('reload', { pageSize: $event.target.value })"
+        @change="tbl.loadData({ pageSize: $event.target.value })"
       >
-        <option v-for="i in defSizes" :value="i" :key="i" :selected="i === def">
+        <option v-for="i in defSizes" :value="i" :key="i" :selected="i === tbl.pageSize">
           {{ i }}
         </option>
       </select>
@@ -16,13 +16,16 @@
 </template>
 
 <script setup>
-defineProps({
-  def: {
-    type: Number,
-    default: 1
+import { tableHelperStore } from '@/stores/jurTableHelper'
+
+const props = defineProps({
+  uid: {
+    type: Number
   }
 })
-defineEmits(['reload'])
+
+// console.log('pageSize=', props.uid)
+const tbl = tableHelperStore(props.uid)()
 
 const defSizes = [1, 2, 3, 50, 100]
 </script>

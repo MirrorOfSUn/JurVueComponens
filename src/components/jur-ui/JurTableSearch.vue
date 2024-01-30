@@ -6,14 +6,17 @@
     <div class="col-auto">
       <input
         class="form-control"
-        @keyup="$emit('reload', { search: $event.target.value })"
-        :value="search"
+        @keyup="tbl.loadData({ search: $event.target.value })"
+        :value="tbl.searchString"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-defineEmits(['reload'])
-defineProps(['search'])
+import { tableHelperStore } from '@/stores/jurTableHelper'
+
+const props = defineProps({ uid: { type: Number } })
+// console.log('search=', props.uid)
+const tbl = tableHelperStore(props.uid)()
 </script>

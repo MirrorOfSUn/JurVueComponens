@@ -24,7 +24,7 @@ const router = createRouter({
     {
       path: '/invoices',
       name: 'invoicesList',
-      component: UserListView
+      component: AboutView
     },
     {
       path: '/report',

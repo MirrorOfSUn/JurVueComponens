@@ -23,7 +23,7 @@
               <router-link class="nav-link" to="/invoices">Invoices</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/report">Report</router-link>
+              <router-link class="nav-link" to="/users">Users</router-link>
             </li>
             <li class="nav-item">
               <router-link class="nav-link" to="/ulb">ULB</router-link>

@@ -1,14 +1,14 @@
 <template>
   <span class="jur_table_pagination">
     <button
-      @click="$emit('reload', { page: data.current_page - 1 })"
-      :disabled="data.current_page == 1"
+      @click="tbl.loadData({ page: tbl.pageCurrent - 1 })"
+      :disabled="tbl.pageCurrent == 1"
     >
       Previous
     </button>
     <button
-      :class="{ active: data.current_page === page }"
-      @click="$emit('reload', { page: page })"
+      :class="{ active: tbl.pageCurrent === page }"
+      @click="tbl.loadData({ page: page })"
       v-for="page in getBeginPages()"
       :key="page"
     >
@@ -16,25 +16,25 @@
     </button>
     <button v-if="isMidExists" :disabled="true">...</button>
     <button
-      :class="{ active: data.current_page === page }"
-      @click="$emit('reload', { page: page })"
+      :class="{ active: tbl.pageCurrent === page }"
+      @click="tbl.loadData({ page: page })"
       v-for="page in getMidPages()"
       :key="page"
     >
       {{ page }}
     </button>
-    <button v-if="isEndExists || data.total_pages > 6" :disabled="true">...</button>
+    <button v-if="isEndExists || tbl.pageTotal > 6" :disabled="true">...</button>
     <button
-      :class="{ active: data.current_page === page }"
-      @click="$emit('reload', { page: page })"
+      :class="{ active: tbl.pageCurrent === page }"
+      @click="tbl.loadData({ page: page })"
       v-for="page in getEndPages()"
       :key="page"
     >
       {{ page }}
     </button>
     <button
-      @click="$emit('reload', { page: data.current_page + 1 })"
-      :disabled="data.current_page >= data.total_pages"
+      @click="tbl.loadData({ page: tbl.pageCurrent + 1 })"
+      :disabled="tbl.pageCurrent >= tbl.pageTotal"
     >
       Next
     </button>
@@ -43,23 +43,24 @@
 
 <script setup>
 import { computed } from 'vue'
+import { tableHelperStore } from '@/stores/jurTableHelper'
 
-const props = defineProps(['data'])
-defineEmits(['reload'])
+const props = defineProps({ uid: { type: Number } })
+const tbl = tableHelperStore(props.uid)()
 
 const isMidExists = computed(() => {
   const res =
-    props.data.current_page > 4 &&
-    props.data.current_page + 4 <= props.data.total_pages &&
-    props.data.total_pages > 9
+    tbl.pageCurrent > 4 &&
+    tbl.pageCurrent + 4 <= tbl.pageTotal &&
+    tbl.pageTotal > 9
   return res
 })
 
 const isEndExists = computed(() => {
   const res =
-    props.data.current_page > props.data.total_pages - 4 &&
-    props.data.current_page <= props.data.total_pages &&
-    props.data.total_pages > 5
+    tbl.pageCurrent > tbl.pageTotal - 4 &&
+    tbl.pageCurrent <= tbl.pageTotal &&
+    tbl.pageTotal > 5
   return res
 })
 
@@ -70,35 +71,28 @@ const getBeginPages = () => {
     return [1]
   } else {
     const res = []
-    for (let i = 1; i <= props.data.total_pages && i <= 5; i++) res.push(i)
+    for (let i = 1; i <= tbl.pageTotal && i <= 5; i++) res.push(i)
     return res
   }
 }
 
 const getMidPages = () => {
-  // if (isEndExists.value) {
-  //   return []
-  // } else
-  if (isMidExists.value) {
-    return [props.data.current_page - 1, props.data.current_page, props.data.current_page + 1]
-  }
-  // else {
-  //   return []
-  // }
+  if (isMidExists.value)
+    return [tbl.pageCurrent - 1, tbl.pageCurrent, tbl.pageCurrent + 1]
   return []
 }
 
 const getEndPages = () => {
   if (isEndExists.value) {
     return [
-      props.data.total_pages - 4,
-      props.data.total_pages - 3,
-      props.data.total_pages - 2,
-      props.data.total_pages - 1,
-      props.data.total_pages
+      tbl.pageTotal - 4,
+      tbl.pageTotal - 3,
+      tbl.pageTotal - 2,
+      tbl.pageTotal - 1,
+      tbl.pageTotal
     ]
-  } else if (isMidExists.value || props.data.total_pages > 5) {
-    return [props.data.total_pages]
+  } else if (isMidExists.value || tbl.pageTotal > 5) {
+    return [tbl.pageTotal]
   }
   return []
 }
@@ -127,5 +121,11 @@ const getEndPages = () => {
 .jur_table_pagination > .active {
   border: 1px solid #727272;
   background-image: linear-gradient (rgb(238, 238, 238), rgb (189, 189, 189));
+}
+.jur_table_pagination > button:disabled,
+.jur_table_pagination > button[disabled] {
+  /* background-color: #cccccc; */
+  color: #9c9c9c !important;
+  pointer-events: none;
 }
 </style>

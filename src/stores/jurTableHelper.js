@@ -57,7 +57,6 @@ export const tableHelperStore = function (tblId) {
         const index = data.value.datatable_selected.indexOf(localInd)
         if (index > -1) data.value.datatable_selected.splice(index, 1)
         else data.value.datatable_selected.push(localInd)
-        console.log('toggle=', localInd, data.value.datatable_selected)
       },
       add: function (ind) {
         const localInd = ind + data.value.current_page * data.value.page_size
@@ -129,7 +128,6 @@ export const tableHelperStore = function (tblId) {
       // return list of records for current page
       if (conf.value.isServerSide) {
         for (const line of data.value.datatable) {
-          //console.log('line=', line)
           yield line
         }
       } else {
@@ -139,7 +137,6 @@ export const tableHelperStore = function (tblId) {
 
         for (const line of localDataFilter()) {
           if (i >= start_line && i < end_line) {
-            //console.log('line=', line)
             yield line
           }
           i++
@@ -158,16 +155,12 @@ export const tableHelperStore = function (tblId) {
       //   search: <T/F serch by this field>,
       //   hidden: <T/F do not show this field in table>}]
       //   type: 'string', 'number', 'boolean'  (Default: string)
-      //console.log('conf.value.fields=', conf.value.fields.length)
       if (conf.value.fields.length == 0) {
         conf.value.fields = []
         // update field set if not provided
         if (data.value.datatable.length > 0) {
-          //console.log('field list will be empty: ', data.value.datatable[0])
-          //console.log(data.value.datatable[0])
           const fieldWidth = Math.floor(100 / Object.keys(data.value.datatable[0]).length)
           for (let key in data.value.datatable[0]) {
-            //console.log(key)
             conf.value.fields.push({
               name: key,
               label: key,
@@ -255,13 +248,13 @@ export const tableHelperStore = function (tblId) {
       }
       for (let recordInx in data.value.datatable) {
         const rec = data.value.datatable[recordInx]
-        //console.log(rec)
+
         for (let ind in fields) {
           const fieldName = conf.value.fields[ind].name
           const fieldType = conf.value.fields[ind].type || 'string'
           const fieldValue =
             'data' in conf.value.fields[ind] ? conf.value.fields[ind].data(rec) : rec[fieldName]
-          // console.log('fv=', fieldValue)
+
           if (fieldType === 'string') {
             // string
             if (fieldValue.toLowerCase().includes(searchString)) {
